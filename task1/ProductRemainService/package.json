@@ -1,0 +1,30 @@
+{
+  "name": "productremainservice",
+  "version": "1.0.0",
+  "description": "service-Product-remains",
+  "main": "index.js",
+  "scripts": {
+    "test": "start",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vladislav-cherashev/test-task.git"
+  },
+  "author": "cherashev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vladislav-cherashev/test-task/issues"
+  },
+  "homepage": "https://github.com/vladislav-cherashev/test-task#readme",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "pg": "^8.13.1",
+    "process": "^0.11.10"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

@@ -9,6 +9,7 @@ const getOneProduct = ( productId ) => {
 }
 
 const createNewProduct = ( product ) => {
+    const { plu, name, countOnShelf, countInOrder, shopId } = product;
     const result = pool.query(
         'INSERT INTO product (plu, name, count_on_shelf, count_in_order, shop_id) VALUES($1, $2, $3, $4, $5) RETURNING *',
         [ plu, name, countOnShelf, countInOrder, shopId ]
@@ -26,7 +27,7 @@ const updateProduct = ( productId, changes ) => {
 }
 
 const deleteProduct = ( productId ) => {
-    return pool.query('DELETE FROM product WHERE id=$1', [ productId ]);
+    return pool.query( 'DELETE FROM product WHERE id=$1', [ productId ] );
 }
 
 module.exports = {

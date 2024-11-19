@@ -1,4 +1,3 @@
-const pool = require( '../config/db' );
 const productRemainService = require( '../services/productRemainService' );
 
 const getAllProducts = async( req, res ) => {
@@ -30,8 +29,12 @@ const getOneProduct = async( req, res ) => {
 
 const getFilteredProducts = async( req, res ) => {
     const { query: { filters } } = req;
-    const filteredStocks = await productRemainService.getFilteredProducts( req, res );
-    res.json( filteredStocks );
+    try {
+        const filteredStocks = await productRemainService.getFilteredProducts( filters );
+        res.status( 200 ).json( filteredStocks.rows );
+    } catch( err ) {
+        res.status( 500 ).json( err.message );
+    }
 };
 
 const createProduct = async( req, res ) => {

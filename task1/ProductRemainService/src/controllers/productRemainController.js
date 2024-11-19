@@ -5,8 +5,8 @@ const getAllProducts = async( req, res ) => {
     const { query: { productId } } = req;
     if( !productId ) {
         try {
-            const result = await pool.query( 'SELECT * FROM product' );
-            res.status( 200 ).json( result.rows );
+            const allProducts = await productRemainService.getAllProducts();
+            res.status( 200 ).json( allProducts.rows );
         } catch( err ) {
             res.status( 500 ).json( { error: err.message } );
         }
@@ -28,6 +28,12 @@ const getOneProduct = async( req, res ) => {
     }
 }
 
+const getFilteredProducts = async( req, res ) => {
+    const { query: { filters } } = req;
+    const filteredStocks = await productRemainService.getFilteredProducts( req, res );
+    res.json( filteredStocks );
+};
+
 const createProduct = async( req, res ) => {
     const { body } = req;
     const { plu, name, countOnShelf, countInOrder, shopId } = body;
@@ -38,11 +44,8 @@ const createProduct = async( req, res ) => {
             plu, name, countOnShelf, countInOrder, shopId
         }
         try {
-            const result = await pool.query(
-                'INSERT INTO product (plu, name, count_on_shelf, count_in_order, shop_id) VALUES($1, $2, $3, $4, $5) RETURNING *',
-                [ plu, name, countOnShelf, countInOrder, shopId ]
-            );
-            res.status( 200 ).json( result.rows[ 0 ] );
+            const createdProduct = await productRemainService.createNewProduct( newProduct )
+            res.status( 200 ).json( createdProduct.rows[ 0 ] );
         } catch( err ) {
             res.status( 500 ).json( err.message );
         }
@@ -50,9 +53,7 @@ const createProduct = async( req, res ) => {
 }
 
 const updateProduct = async( req, res ) => {
-    console.log( 'updateProduct>>>>>>>>>>>>>>>>>>>>>>>>' )
     const { body, params: { productId } } = req;
-    console.log( productId )
     if( !productId ) {
         return res.send( 'No productId' );
     }
@@ -67,12 +68,24 @@ const updateProduct = async( req, res ) => {
     }
 }
 
-const deleteProduct = ( req, res ) => {
-    res.send( 'Delete product' );
+const deleteProduct = async( req, res ) => {
+    const { params: { productId } } = req;
+    if( !productId ) {
+        return res.send( 'No productId' );
+    }
+    try {
+        await productRemainService.deleteProduct(
+            productId,
+        );
+        res.status( 204 ).send();
+    } catch( err ) {
+        res.status( 500 ).json( err.message );
+    }
 }
 
 module.exports = {
     getAllProducts,
+    getFilteredProducts,
     getOneProduct,
     createProduct,
     updateProduct,

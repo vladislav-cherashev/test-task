@@ -1,8 +1,4 @@
 const pool = require( '../config/db' );
-const utils = require( '../dataBase/utils' );
-const applyFilters = ( item, filters ) => {
-    return Object.keys( filters ).every( key => item[ key ] === filters[ key ] );
-};
 
 const getAllProducts = () => {
     return pool.query( 'SELECT * FROM product' );
@@ -10,10 +6,6 @@ const getAllProducts = () => {
 
 const getOneProduct = ( productId ) => {
     return pool.query( 'SELECT * FROM product WHERE id=$1', [ productId ] );
-}
-
-const getFilteredProducts = () => {
-    return Object.values( getAllProducts ).filter( stock => applyFilters( stock, filters ) );
 }
 
 const createNewProduct = ( product ) => {
@@ -40,7 +32,6 @@ const deleteProduct = ( productId ) => {
 module.exports = {
     getAllProducts,
     getOneProduct,
-    getFilteredProducts,
     createNewProduct,
     updateProduct,
     deleteProduct,

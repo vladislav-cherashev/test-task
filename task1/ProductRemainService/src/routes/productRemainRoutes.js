@@ -8,6 +8,8 @@ router.get( '/products', productRemainController.getFilteredProducts );
 router.get( '/stocks', productRemainController.getFilteredStocks );
 // router.get( '/:productId', productRemainController.getOneProduct );
 router.put( '/:productId', productRemainController.updateProduct );
+router.put( '/:/stocks/increase', productRemainController.increaseStocks );
+router.put( '/:/stocks/decrease', productRemainController.decreaseStocks );
 router.delete( '/:productId', productRemainController.deleteProduct );
 
 module.exports = router;

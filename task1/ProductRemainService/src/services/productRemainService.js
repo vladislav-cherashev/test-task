@@ -34,6 +34,24 @@ const getFilteredStocks = async( filters ) => {
     } );
 }
 
+const increaseStocks = async( productId, amount ) => {
+    const currentProduct = await utils.getOneProduct( productId ).rows[ 0 ];
+    if( currentProduct ) {
+        currentProduct.count_on_shelf += amount;
+        currentProduct.count_in_order += amount;
+        utils.updateProduct( productId, currentProduct );
+    }
+}
+
+const decreaseStocks = async( productId, amount ) => {
+    const currentProduct = await utils.getOneProduct( productId ).rows[ 0 ];
+    if( currentProduct ) {
+        currentProduct.count_on_shelf -= amount;
+        currentProduct.count_in_order -= amount;
+        utils.updateProduct( productId, currentProduct );
+    }
+}
+
 const createNewProduct = ( product ) => {
     return utils.createNewProduct( product );
 }
@@ -57,6 +75,8 @@ module.exports = {
     getFilteredStocks,
     createNewProduct,
     createNewStocks,
+    increaseStocks,
+    decreaseStocks,
     updateProduct,
     deleteProduct,
 }

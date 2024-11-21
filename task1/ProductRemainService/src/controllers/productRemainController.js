@@ -83,6 +83,24 @@ const createStocks = async( req, res ) => {
     }
 }
 
+const increaseStocks = async( req, res ) => {
+    const { body: { productId, amount } } = req;
+    if( !productId ) {
+        return res.send( 'No productId' );
+    } else {
+        await productRemainService.increaseStocks( productId, amount );
+    }
+}
+
+const decreaseStocks = async( req, res ) => {
+    const { body: { productId, amount } } = req;
+    if( !productId ) {
+        return res.send( 'No productId' );
+    } else {
+        await productRemainService.decreaseStocks( productId, amount );
+    }
+}
+
 const updateProduct = async( req, res ) => {
     const { body, params: { productId } } = req;
     if( !productId ) {
@@ -121,6 +139,8 @@ module.exports = {
     getOneProduct,
     createProduct,
     createStocks,
+    increaseStocks,
+    decreaseStocks,
     updateProduct,
     deleteProduct,
 }

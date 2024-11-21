@@ -28,10 +28,20 @@ const getOneProduct = async( req, res ) => {
 }
 
 const getFilteredProducts = async( req, res ) => {
-    const { query: { filters } } = req;
+    const { body: { filters } } = req;
     try {
-        const filteredStocks = await productRemainService.getFilteredProducts( filters );
-        res.status( 200 ).json( filteredStocks.rows );
+        const filteredProducts = await productRemainService.getFilteredProducts( filters );
+        res.status( 200 ).json( filteredProducts );
+    } catch( err ) {
+        res.status( 500 ).json( err.message );
+    }
+};
+
+const getFilteredStocks = async( req, res ) => {
+    const { body: { filters } } = req;
+    try {
+        const filteredStocks = await productRemainService.getFilteredStocks( filters );
+        res.status( 200 ).json( filteredStocks );
     } catch( err ) {
         res.status( 500 ).json( err.message );
     }
@@ -41,14 +51,32 @@ const createProduct = async( req, res ) => {
     const { body } = req;
     const { plu, name, countOnShelf, countInOrder, shopId } = body;
     if( !plu || !name || !countOnShelf || !countInOrder || !shopId ) {
-        res.status( 400 ).send( 'Error: please enter a valid name' );
+        res.status( 400 ).send( 'Error: please enter a valid data' );
     } else {
         const newProduct = {
             plu, name, countOnShelf, countInOrder, shopId
         }
         try {
-            const createdProduct = await productRemainService.createNewProduct( newProduct )
+            const createdProduct = await productRemainService.createNewProduct( newProduct );
             res.status( 200 ).json( createdProduct.rows[ 0 ] );
+        } catch( err ) {
+            res.status( 500 ).json( err.message );
+        }
+    }
+}
+
+const createStocks = async( req, res ) => {
+    const { body } = req;
+    const { plu, name, countOnShelf, countInOrder, shopId } = body;
+    if( !plu || !name || !countOnShelf || !countInOrder || !shopId ) {
+        res.status( 400 ).send( 'Error: please enter a valid data' );
+    } else {
+        const newProduct = {
+            plu, name, countOnShelf, countInOrder, shopId
+        }
+        try {
+            const createdStocks = await productRemainService.createNewStocks( newProduct );
+            res.status( 200 ).json( createdStocks.rows[ 0 ] );
         } catch( err ) {
             res.status( 500 ).json( err.message );
         }
@@ -89,8 +117,10 @@ const deleteProduct = async( req, res ) => {
 module.exports = {
     getAllProducts,
     getFilteredProducts,
+    getFilteredStocks,
     getOneProduct,
     createProduct,
+    createStocks,
     updateProduct,
     deleteProduct,
 }

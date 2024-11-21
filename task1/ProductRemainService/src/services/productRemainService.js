@@ -1,9 +1,7 @@
-const pool = require( '../config/db' );
 const utils = require( '../dataBase/utils' );
-const wasi = require( 'node:wasi' );
 
 const applyFilters = ( item, filters ) => {
-    return Object.keys( filters ).every( key => item[ key ] === filters[ key ] );
+    return Object.keys( filters ).some( key => item[ key ] === filters[ key ] );
 };
 
 const getAllProducts = () => {
@@ -16,10 +14,31 @@ const getOneProduct = ( productId ) => {
 
 const getFilteredProducts = async( filters ) => {
     const allProducts = await utils.getAllProducts();
-    return Object.values( allProducts ).filter( stock => applyFilters( stock, filters ) );
+    return allProducts.rows.filter( item => {
+        if( applyFilters( item, filters ) ) {
+            return item;
+        }
+    } );
+}
+
+const getFilteredStocks = async( filters ) => {
+    const allProducts = await utils.getAllProducts();
+    let countStocks = {};
+    return allProducts.rows.filter( item => {
+        if( applyFilters( item, filters ) ) {
+            return countStocks = {
+                countOnShelf: item.countOnShelf,
+                countInOrder: item.countInOrder
+            };
+        }
+    } );
 }
 
 const createNewProduct = ( product ) => {
+    return utils.createNewProduct( product );
+}
+
+const createNewStocks = ( product ) => {
     return utils.createNewProduct( product );
 }
 
@@ -35,7 +54,9 @@ module.exports = {
     getAllProducts,
     getOneProduct,
     getFilteredProducts,
+    getFilteredStocks,
     createNewProduct,
+    createNewStocks,
     updateProduct,
     deleteProduct,
 }

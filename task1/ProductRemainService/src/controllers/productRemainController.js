@@ -67,7 +67,7 @@ const createProduct = async( req, res ) => {
 
 const createStocks = async( req, res ) => {
     const { body } = req;
-    const {  countOnShelf, countInOrder, shop } = body;
+    const { countOnShelf, countInOrder, shop } = body;
     if( !countOnShelf || !countInOrder || !shop ) {
         res.status( 400 ).send( 'Error: please enter a valid data' );
     } else {

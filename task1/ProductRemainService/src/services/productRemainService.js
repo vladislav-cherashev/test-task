@@ -23,32 +23,29 @@ const getFilteredProducts = async( filters ) => {
 
 const getFilteredStocks = async( filters ) => {
     const allProducts = await utils.getAllProducts();
-    let countStocks = {};
     return allProducts.rows.filter( item => {
         if( applyFilters( item, filters ) ) {
-            return countStocks = {
-                countOnShelf: item.countOnShelf,
-                countInOrder: item.countInOrder
-            };
+            const productId = item.id;
+            return utils.getStocks( productId );
         }
     } );
 }
 
 const increaseStocks = async( productId, amount ) => {
-    const currentProduct = await utils.getOneProduct( productId ).rows[ 0 ];
-    if( currentProduct ) {
-        currentProduct.count_on_shelf += amount;
-        currentProduct.count_in_order += amount;
-        utils.updateProduct( productId, currentProduct );
+    const countInShop = await utils.getStocks( productId ).rows[ 0 ];
+    if( countInShop ) {
+        countInShop.count_on_shelf += amount;
+        countInShop.count_in_order += amount;
+        utils.updateStocks( productId, countInShop );
     }
 }
 
 const decreaseStocks = async( productId, amount ) => {
-    const currentProduct = await utils.getOneProduct( productId ).rows[ 0 ];
-    if( currentProduct ) {
-        currentProduct.count_on_shelf -= amount;
-        currentProduct.count_in_order -= amount;
-        utils.updateProduct( productId, currentProduct );
+    const countInShop = await utils.getStocks( productId ).rows[ 0 ];
+    if( countInShop ) {
+        countInShop.count_on_shelf -= amount;
+        countInShop.count_in_order -= amount;
+        utils.updateStocks( productId, countInShop );
     }
 }
 

@@ -6,7 +6,7 @@ router.post( '/', productRemainController.createProduct );
 router.post( '/stocks', productRemainController.createStocks );
 router.get( '/products', productRemainController.getFilteredProducts );
 router.get( '/stocks', productRemainController.getFilteredStocks );
-// router.get( '/:productId', productRemainController.getOneProduct );
+router.get( '/:productId', productRemainController.getOneProduct );
 router.put( '/:productId', productRemainController.updateProduct );
 router.put( '/:/stocks/increase', productRemainController.increaseStocks );
 router.put( '/:/stocks/decrease', productRemainController.decreaseStocks );

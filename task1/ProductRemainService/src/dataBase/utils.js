@@ -9,19 +9,32 @@ const getOneProduct = ( productId ) => {
 }
 
 const createNewProduct = ( product ) => {
-    const { plu, name, countOnShelf, countInOrder, shopId } = product;
+    const { name, plu } = product;
     const result = pool.query(
-        'INSERT INTO product (plu, name, count_on_shelf, count_in_order, shop_id) VALUES($1, $2, $3, $4, $5) RETURNING *',
-        [ plu, name, countOnShelf, countInOrder, shopId ]
+        'INSERT INTO product ( name, plu ) VALUES($1, $2, $3) RETURNING *',
+        [ name, plu ]
     );
     return result;
 }
 
 const updateProduct = ( productId, changes ) => {
-    const { plu, name, countOnShelf, countInOrder, shopId } = changes;
+    const { pluNumber, name } = changes;
     const result = pool.query(
-        'UPDATE product SET plu=$2, name=$3, count_on_shelf=$4, count_in_order=$5, shop_id=$6 WHERE id=$1 RETURNING *',
-        [ productId, plu, name, countOnShelf, countInOrder, shopId ]
+        'UPDATE product SET name=$2, plu=$3 WHERE id=$1 RETURNING *',
+        [ productId, name, pluNumber ]
+    );
+    return result;
+}
+
+const getStocks = ( filter ) => {
+    return pool.query( 'SELECT count_on_shelf FROM shop WHERE id=$1', [ filter ] );
+}
+
+const updateStocks = ( productId, changes ) => {
+    const { count_on_shelf, count_in_order } = changes;
+    const result = pool.query(
+        'UPDATE shop SET count_on_shelf=$2, count_in_order=$3 WHERE product_id=$1',
+        [ productId, count_on_shelf, count_in_order ]
     );
     return result;
 }
@@ -34,6 +47,8 @@ module.exports = {
     getAllProducts,
     getOneProduct,
     createNewProduct,
+    getStocks,
     updateProduct,
+    updateStocks,
     deleteProduct,
 }

@@ -49,12 +49,12 @@ const getFilteredStocks = async( req, res ) => {
 
 const createProduct = async( req, res ) => {
     const { body } = req;
-    const { plu, name, countOnShelf, countInOrder, shopId } = body;
-    if( !plu || !name || !countOnShelf || !countInOrder || !shopId ) {
+    const { plu, name } = body;
+    if( !plu || !name ) {
         res.status( 400 ).send( 'Error: please enter a valid data' );
     } else {
         const newProduct = {
-            plu, name, countOnShelf, countInOrder, shopId
+            plu, name
         }
         try {
             const createdProduct = await productRemainService.createNewProduct( newProduct );
@@ -67,15 +67,17 @@ const createProduct = async( req, res ) => {
 
 const createStocks = async( req, res ) => {
     const { body } = req;
-    const { plu, name, countOnShelf, countInOrder, shopId } = body;
-    if( !plu || !name || !countOnShelf || !countInOrder || !shopId ) {
+    const {  countOnShelf, countInOrder, shop } = body;
+    if( !countOnShelf || !countInOrder || !shop ) {
         res.status( 400 ).send( 'Error: please enter a valid data' );
     } else {
-        const newProduct = {
-            plu, name, countOnShelf, countInOrder, shopId
+        const newStocks = {
+            countOnShelf,
+            countInOrder,
+            shopId: Math.floor( Math.random() * 1001 )
         }
         try {
-            const createdStocks = await productRemainService.createNewStocks( newProduct );
+            const createdStocks = await productRemainService.createNewStocks( newStocks );
             res.status( 200 ).json( createdStocks.rows[ 0 ] );
         } catch( err ) {
             res.status( 500 ).json( err.message );

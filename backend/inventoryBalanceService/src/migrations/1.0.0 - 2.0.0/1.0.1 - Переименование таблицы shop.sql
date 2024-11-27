@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS public.shop
+RENAME TO stocks;

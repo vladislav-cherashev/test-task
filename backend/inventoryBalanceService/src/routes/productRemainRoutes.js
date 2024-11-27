@@ -2,14 +2,15 @@ const express = require( 'express' );
 const router = express.Router();
 const productRemainController = require( '../controllers/productRemainController' );
 
-router.post( '/', productRemainController.createProduct );
-router.post( '/stocks', productRemainController.createStocks );
-router.get( '/products', productRemainController.getFilteredProducts );
+router.get( '/', productRemainController.getAllProducts );
+router.get( '/filteredProducts', productRemainController.getFilteredProducts );
 router.get( '/stocks', productRemainController.getFilteredStocks );
 router.get( '/:productId', productRemainController.getOneProduct );
-router.put( '/:productId', productRemainController.updateProduct );
-router.put( '/:/stocks/increase', productRemainController.increaseStocks );
-router.put( '/:/stocks/decrease', productRemainController.decreaseStocks );
+router.post( '/', productRemainController.createProduct );
+router.post( '/stocks', productRemainController.createStocks );
+router.put( '/:productId', productRemainController.updateProductById );
+router.put( '/stocks/increase', productRemainController.increaseStocks );
+router.put( '/stocks/decrease', productRemainController.decreaseStocks );
 router.delete( '/:productId', productRemainController.deleteProduct );
 
 module.exports = router;

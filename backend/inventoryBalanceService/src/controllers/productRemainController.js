@@ -67,17 +67,18 @@ const createProduct = async( req, res ) => {
 
 const createStocks = async( req, res ) => {
     const { body } = req;
-    const { countOnShelf, countInOrder, shop } = body;
-    if( !countOnShelf || !countInOrder || !shop ) {
+    const { productId, countOnShelf, countInOrder, shop } = body;
+    if( !productId || !countOnShelf || !countInOrder || !shop ) {
         res.status( 400 ).send( 'Error: please enter a valid data' );
     } else {
-        const newStocks = {
+        const newStock = {
+            shopId: Math.floor( Math.random() * 1001 ),
+            productId,
             countOnShelf,
-            countInOrder,
-            shopId: Math.floor( Math.random() * 1001 )
+            countInOrder
         }
         try {
-            const createdStocks = await productRemainService.createNewStocks( newStocks );
+            const createdStocks = await productRemainService.createNewStock( newStock );
             res.status( 200 ).json( createdStocks.rows[ 0 ] );
         } catch( err ) {
             res.status( 500 ).json( err.message );
@@ -86,30 +87,40 @@ const createStocks = async( req, res ) => {
 }
 
 const increaseStocks = async( req, res ) => {
-    const { body: { productId, amount } } = req;
+    const { body: { productId, target, amount } } = req;
     if( !productId ) {
         return res.send( 'No productId' );
     } else {
-        await productRemainService.increaseStocks( productId, amount );
+        try {
+            const stocks = await productRemainService.increaseStocks( productId, target, amount );
+            res.status( 200 ).json( stocks.rows[ 0 ] );
+        } catch( err ) {
+            res.status( 500 ).json( err.message );
+        }
     }
 }
 
 const decreaseStocks = async( req, res ) => {
-    const { body: { productId, amount } } = req;
+    const { body: { productId, target, amount } } = req;
     if( !productId ) {
         return res.send( 'No productId' );
     } else {
-        await productRemainService.decreaseStocks( productId, amount );
+        try {
+            const stocks = await productRemainService.decreaseStocks( productId, target, amount );
+            res.status( 200 ).json( stocks.rows[ 0 ] );
+        } catch( err ) {
+            res.status( 500 ).json( err.message );
+        }
     }
 }
 
-const updateProduct = async( req, res ) => {
+const updateProductById = async( req, res ) => {
     const { body, params: { productId } } = req;
     if( !productId ) {
         return res.send( 'No productId' );
     }
     try {
-        const updatedProduct = await productRemainService.updateProduct(
+        const updatedProduct = await productRemainService.updateProductById(
             productId,
             body
         );
@@ -143,6 +154,6 @@ module.exports = {
     createStocks,
     increaseStocks,
     decreaseStocks,
-    updateProduct,
+    updateProductById,
     deleteProduct,
 }

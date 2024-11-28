@@ -4,7 +4,9 @@ const productRemainController = require( '../controllers/productRemainController
 
 router.get( '/', productRemainController.getAllProducts );
 router.get( '/filteredProducts', productRemainController.getFilteredProducts );
-router.get( '/stocks', productRemainController.getFilteredStocks );
+router.get( '/filteredStocks', productRemainController.getFilteredStocks );
+router.get( '/filteredStocksByCountOnShelf', productRemainController.getFilteredStocksByCountOnShelf );
+router.get( '/filteredStocksByCountInOrder', productRemainController.getFilteredStocksByCountInOrder );
 router.get( '/:productId', productRemainController.getOneProduct );
 router.post( '/', productRemainController.createProduct );
 router.post( '/stocks', productRemainController.createStocks );

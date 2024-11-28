@@ -41,6 +41,26 @@ const getFilteredStocks = async( req, res ) => {
     const { body: { filters } } = req;
     try {
         const filteredStocks = await productRemainService.getFilteredStocks( filters );
+        res.status( 200 ).json( filteredStocks[ 0 ].rows[ 0 ] );
+    } catch( err ) {
+        res.status( 500 ).json( err.message );
+    }
+};
+
+const getFilteredStocksByCountOnShelf = async( req, res ) => {
+    const { body: { filters } } = req;
+    try {
+        const filteredStocks = await productRemainService.getFilteredStocksByCountOnShelf( filters );
+        res.status( 200 ).json( filteredStocks );
+    } catch( err ) {
+        res.status( 500 ).json( err.message );
+    }
+};
+
+const getFilteredStocksByCountInOrder = async( req, res ) => {
+    const { body: { filters } } = req;
+    try {
+        const filteredStocks = await productRemainService.getFilteredStocksByCountInOrder( filters );
         res.status( 200 ).json( filteredStocks );
     } catch( err ) {
         res.status( 500 ).json( err.message );
@@ -149,6 +169,8 @@ module.exports = {
     getAllProducts,
     getFilteredProducts,
     getFilteredStocks,
+    getFilteredStocksByCountOnShelf,
+    getFilteredStocksByCountInOrder,
     getOneProduct,
     createProduct,
     createStocks,

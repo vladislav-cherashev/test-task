@@ -4,6 +4,10 @@ const getAllProducts = () => {
     return pool.query( 'SELECT * FROM product' );
 }
 
+const getAllStocks = ()=>{
+    return pool.query( 'SELECT * FROM stocks' );
+}
+
 const getOneProduct = ( productId ) => {
     return pool.query( 'SELECT * FROM product WHERE id=$1', [ productId ] );
 }
@@ -35,13 +39,15 @@ const updateProduct = ( productId, changes ) => {
     return result;
 }
 
-const getStockById = ( productId ) => {
+const getStocksByProductId = ( productId ) => {
     return pool.query( 'SELECT * FROM stocks WHERE product_id=$1', [ productId ] );
 }
 
+const getStocksByShopId = ( shopId ) => {
+    return pool.query( 'SELECT * FROM stocks WHERE shop_id=$2', [ shopId ] );
+}
+
 const updateStockById = ( productId, changes ) => {
-    console.log('changes')
-    console.log(changes)
     const { count_on_shelf, count_in_order } = changes;
     const result = pool.query(
         'UPDATE stocks SET count_on_shelf=$2, count_in_order=$3 WHERE product_id=$1',
@@ -56,10 +62,12 @@ const deleteProduct = ( productId ) => {
 
 module.exports = {
     getAllProducts,
+    getAllStocks,
     getOneProduct,
     createNewProduct,
     createNewStock,
-    getStockById,
+    getStocksByProductId,
+    getStocksByShopId,
     updateProduct,
     updateStockById,
     deleteProduct,

@@ -14,26 +14,60 @@ const getOneProduct = ( productId ) => {
 
 const getFilteredProducts = async( filters ) => {
     const allProducts = await utils.getAllProducts();
-    return allProducts.rows.filter( item => {
+    const filteredProducts = [];
+    allProducts.rows.filter( item => {
         if( applyFilters( item, filters ) ) {
-            console.log( item )
-            return item;
+            filteredProducts.push( item );
         }
     } );
+    return filteredProducts;
 }
 
 const getFilteredStocks = async( filters ) => {
-    const allProducts = await utils.getAllProducts();
-    return allProducts.rows.filter( item => {
-        if( applyFilters( item, filters ) ) {
-            const productId = item.id;
-            return utils.getStockById( productId );
+    const result = [];
+    let productId = 0;
+    const { plu, shopId } = filters;
+    if( plu ) {
+        const allProducts = await utils.getAllProducts();
+        allProducts.rows.filter( item => {
+            if( applyFilters( item, filters ) ) {
+                productId = item.id;
+            }
+        } );
+        const stock = await utils.getStocksByProductId( productId );
+        result.push( stock );
+    }
+    if( shopId ) {
+        const stock = await utils.getStocksByShopId( shopId );
+        result.push( stock );
+    }
+    return result;
+}
+
+const getFilteredStocksByCountOnShelf = async( filters ) => {
+    const { countFrom, countFor } = filters;
+    const allStocks = await utils.getAllStocks();
+    const items = allStocks.rows.filter( item => {
+        if( item.count_on_shelf >= countFrom && item.count_on_shelf <= countFor ) {
+            return item;
         }
     } );
+    return items;
+}
+
+const getFilteredStocksByCountInOrder = async( filters ) => {
+    const { countFrom, countFor } = filters;
+    const allStocks = await utils.getAllStocks();
+    const items = allStocks.rows.filter( item => {
+        if( item.count_in_order >= countFrom && item.count_in_order <= countFor ) {
+            return item;
+        }
+    } );
+    return items;
 }
 
 const increaseStocks = async( productId, target, amount ) => {
-    const stocksInShop = await utils.getStockById( productId );
+    const stocksInShop = await utils.getStocksByProductId( productId );
     const currentStock = stocksInShop.rows[ 0 ];
     const count = Number( amount );
     if( currentStock && !isNaN( count ) ) {
@@ -50,7 +84,7 @@ const increaseStocks = async( productId, target, amount ) => {
 }
 
 const decreaseStocks = async( productId, target, amount ) => {
-    const stocksInShop = await utils.getStockById( productId );
+    const stocksInShop = await utils.getStocksByProductId( productId );
     const currentStock = stocksInShop.rows[ 0 ];
     const count = Number( amount );
     if( currentStock && !isNaN( count ) ) {
@@ -87,6 +121,8 @@ module.exports = {
     getOneProduct,
     getFilteredProducts,
     getFilteredStocks,
+    getFilteredStocksByCountOnShelf,
+    getFilteredStocksByCountInOrder,
     createNewProduct,
     createNewStock,
     increaseStocks,

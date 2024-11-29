@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "nodemon src/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vladislav-cherashev/test-task.git"
+  },
   "author": "",
   "license": "ISC",
   "description": "",

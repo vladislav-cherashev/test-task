@@ -79,6 +79,8 @@ const createProduct = async( req, res ) => {
         try {
             const createdProduct = await productRemainService.createNewProduct( newProduct );
             res.status( 200 ).json( createdProduct.rows[ 0 ] );
+            const dataForHistory = createdProduct;
+            axios.post('http://localhost:5001/activityHistory/productId')
         } catch( err ) {
             res.status( 500 ).json( err.message );
         }
@@ -163,6 +165,11 @@ const deleteProduct = async( req, res ) => {
     } catch( err ) {
         res.status( 500 ).json( err.message );
     }
+}
+
+const createHistory = (data) => {
+    const dataForHistory = data
+    axios.post('http://localhost:5001/activityHistory/productId')
 }
 
 module.exports = {

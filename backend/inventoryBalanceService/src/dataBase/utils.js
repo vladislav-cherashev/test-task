@@ -4,7 +4,7 @@ const getAllProducts = () => {
     return pool.query( 'SELECT * FROM product' );
 }
 
-const getAllStocks = ()=>{
+const getAllStocks = () => {
     return pool.query( 'SELECT * FROM stocks' );
 }
 

@@ -1,4 +1,30 @@
 const productRemainService = require( '../services/productRemainService' );
+const axios = require( 'axios' );
+
+const createDefaultStocks = ( newProduct ) => {
+    const newStock = {
+        shopId      : Math.floor( Math.random() * 1001 ),
+        productId   : newProduct.id,
+        countOnShelf: 0,
+        countInOrder: 0
+    }
+    productRemainService.createNewStock( newStock );
+}
+
+const createHistory = async( data ) => {
+    await axios.post( 'http://localhost:5001/activityHistory/create', data );
+}
+
+const prepareDataForHistory = async( product ) => {
+    const stocks = await productRemainService.getStocksByProductId( product.id );
+    const currentStock = stocks.rows[ 0 ];
+    const data = {
+        shopId   : currentStock.shop_id,
+        productId: product.id,
+        plu      : product.plu,
+    };
+    await createHistory( data );
+}
 
 const getAllProducts = async( req, res ) => {
     const { query: { productId } } = req;
@@ -78,9 +104,9 @@ const createProduct = async( req, res ) => {
         }
         try {
             const createdProduct = await productRemainService.createNewProduct( newProduct );
+            await createDefaultStocks( createdProduct.rows[ 0 ] );
+            prepareDataForHistory( createdProduct.rows[ 0 ] );
             res.status( 200 ).json( createdProduct.rows[ 0 ] );
-            const dataForHistory = createdProduct;
-            axios.post('http://localhost:5001/activityHistory/productId')
         } catch( err ) {
             res.status( 500 ).json( err.message );
         }
@@ -167,11 +193,6 @@ const deleteProduct = async( req, res ) => {
     }
 }
 
-const createHistory = (data) => {
-    const dataForHistory = data
-    axios.post('http://localhost:5001/activityHistory/productId')
-}
-
 module.exports = {
     getAllProducts,
     getFilteredProducts,
@@ -185,4 +206,5 @@ module.exports = {
     decreaseStocks,
     updateProductById,
     deleteProduct,
+    prepareDataForHistory,
 }

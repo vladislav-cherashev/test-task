@@ -1,4 +1,5 @@
-const activityHistoryService = require('../services/activityHistoryService');
+const activityHistoryService = require( '../services/activityHistoryService' );
+
 /**
  * Функция возврата истории по фильтрам
  * - shop_id
@@ -12,8 +13,22 @@ const getFilteredHistory = ( res, req ) => {
 
 }
 
-const createActivityHistory = (res, req) => {
-
+const createActivityHistory = async( res, req ) => {
+    // const { body: { productId, plu } } = req;
+    console.log( 'createActivityHistory>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
+    console.log( req.body );
+    try {
+        console.log(req.body)
+        // const objectForSave = {
+        //     productId,
+        //     shopId: Math.floor( Math.random() * 1001 ),
+        //     plu,
+        // }
+        // const activity = await activityHistoryService.createActivityHistory( objectForSave );
+        // res.status( 200 ).json( activity.rows[ 0 ] );
+    } catch( err ) {
+        res.status( 500 ).send( err.message );
+    }
 }
 
 module.exports = {

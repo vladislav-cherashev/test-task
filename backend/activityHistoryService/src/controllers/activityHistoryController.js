@@ -16,7 +16,6 @@ const getFilteredHistory = ( res, req ) => {
 const createActivityHistory = async( res, req ) => {
     const { body: { productId, plu } } = req;
     try {
-        console.log(req.body)
         const objectForSave = {
             productId,
             shopId: Math.floor( Math.random() * 1001 ),

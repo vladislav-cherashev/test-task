@@ -14,18 +14,16 @@ const getFilteredHistory = ( res, req ) => {
 }
 
 const createActivityHistory = async( res, req ) => {
-    // const { body: { productId, plu } } = req;
-    console.log( 'createActivityHistory>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-    console.log( req.body );
+    const { body: { productId, plu } } = req;
     try {
         console.log(req.body)
-        // const objectForSave = {
-        //     productId,
-        //     shopId: Math.floor( Math.random() * 1001 ),
-        //     plu,
-        // }
-        // const activity = await activityHistoryService.createActivityHistory( objectForSave );
-        // res.status( 200 ).json( activity.rows[ 0 ] );
+        const objectForSave = {
+            productId,
+            shopId: Math.floor( Math.random() * 1001 ),
+            plu,
+        }
+        const activity = await activityHistoryService.createActivityHistory( objectForSave );
+        res.status( 200 ).json( activity.rows[ 0 ] );
     } catch( err ) {
         res.status( 500 ).send( err.message );
     }
